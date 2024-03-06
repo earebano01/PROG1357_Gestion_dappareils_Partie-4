@@ -3,8 +3,8 @@ from django.shortcuts import render
 def home(request):
     return render(request, 'ardjson/intro.html')
 
-def jsonView(request):
-    return render(request, 'ardjson/json.html')
+def objconnView(request):
+    return render(request, 'ardjson/objconn.html')
 
 def soundView(request):
     return render(request, 'ardjson/sound.html')

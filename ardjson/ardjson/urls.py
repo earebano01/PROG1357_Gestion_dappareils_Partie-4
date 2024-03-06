@@ -8,7 +8,7 @@ router = routers.SimpleRouter()
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', views.home, name='home'),
-    path('json/', views.jsonView, name='json'),    
+    path('objconn/', views.objconnView, name='objconn'),    
     path('sound/', views.soundView, name='sound'),
     path('photoresistance/', views.photoresistanceView, name='photoresistance'),    
     path('dht11/', views.dht11View, name='dht11'),
