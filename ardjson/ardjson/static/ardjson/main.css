@@ -3,7 +3,7 @@ body {
     color: #fff;
 }
 
-h3 {
+h2 {
     color: #fff;
     font-weight: bold;
     text-align: center;
@@ -14,14 +14,13 @@ canvas {
 }
 
 .scroll-container {
-    max-height: 500px; 
+    max-height: 525px; 
     overflow-y: auto;
-    border: 1px solid #ddd;
-    padding: 10px;
+    padding: 8px;
+    text-align: center;
 }
 
 .dataContainer {
-    white-space: pre-wrap;
     color: white;
 }
 
@@ -48,4 +47,3 @@ canvas {
     cursor: pointer;
     margin-bottom: 15px;
 }
-

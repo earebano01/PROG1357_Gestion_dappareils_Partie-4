@@ -1,4 +1,5 @@
 from django.shortcuts import render
+from .models import Objetconnecte
 
 def home(request):
     return render(request, 'ardjson/intro.html')
@@ -14,3 +15,8 @@ def photoresistanceView(request):
 
 def dht11View(request):
     return render(request, 'ardjson/dht11.html')
+
+def objconnView(request):
+    objets = Objetconnecte.objects.all()
+    return render(request, 'ardjson/objconn.html', {'objets': objets})
+
