@@ -1,0 +1,41 @@
+{% extends 'ardjson/base.html' %}
+
+{% block content %}
+<br>
+<div class="text-center">
+    <h3>Liste des Objets Connectés</h3>
+</div>
+<div class="scroll-container">
+    <table class="table table-dark table-striped table-padding">
+        <thead>
+            <tr>
+                <th>Nom</th>
+                <th>Device ID</th>
+                <th>Type</th>
+                <th>Type de Mesure</th>
+                <th>Type d'Action</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody id="body">
+            {% for objet in objets %}
+            <tr>
+                <td>{{ objet.nom }}</td>
+                <td>{{ objet.device_id }}</td>
+                <td>{{ objet.type }}</td>
+                <td>{{ objet.typemesure }}</td>
+                <td>{{ objet.typeaction }}</td>
+                <td>
+                    <a href="" class="btn btn-primary btn-sm">Modifier</a>
+                    <a href="" class="btn btn-danger btn-sm">Supprimer</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+<br>
+<div class="text-center">
+    <a href="{% url 'add_obj' %}" class="btn btn-success">Ajouter un Objet Connecté</a>
+</div>
+{% endblock %}

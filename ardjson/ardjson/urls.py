@@ -12,5 +12,6 @@ urlpatterns = [
     path('sound/', views.soundView, name='sound'),
     path('photoresistance/', views.photoresistanceView, name='photoresistance'),    
     path('dht11/', views.dht11View, name='dht11'),
+    path('add_obj/', views.add_objView, name='add_obj'),
 ]
 

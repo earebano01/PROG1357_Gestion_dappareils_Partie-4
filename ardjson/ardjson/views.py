@@ -16,6 +16,9 @@ def photoresistanceView(request):
 def dht11View(request):
     return render(request, 'ardjson/dht11.html')
 
+def add_objView(request):
+    return render(request, 'ardjson/add_obj.html')
+
 def objconnView(request):
     objets = Objetconnecte.objects.all()
     return render(request, 'ardjson/objconn.html', {'objets': objets})

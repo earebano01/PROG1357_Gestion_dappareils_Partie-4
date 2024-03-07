@@ -20,6 +20,19 @@ canvas {
     text-align: center;
 }
 
+.scroll-container::-webkit-scrollbar {
+    width: 10px;
+}
+
+.scroll-container::-webkit-scrollbar-track {
+    background: #333;
+}
+
+.scroll-container::-webkit-scrollbar-thumb {
+    background-color: #666;
+    border-radius: 5px;
+}
+
 .dataContainer {
     color: white;
 }
