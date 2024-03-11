@@ -20,6 +20,27 @@ canvas {
     text-align: center;
 }
 
+.scroll-verification {
+    max-height: 200px; 
+    overflow-y: auto;
+    border: 1px;
+    padding: 8px;
+    text-align: left;
+}
+
+.scroll-verification::-webkit-scrollbar {
+    width: 10px;
+}
+
+.scroll-verification::-webkit-scrollbar-track {
+    background: #333;
+}
+
+.scroll-verification::-webkit-scrollbar-thumb {
+    background-color: #666;
+    border-radius: 5px;
+}
+
 .scroll-container::-webkit-scrollbar {
     width: 10px;
 }

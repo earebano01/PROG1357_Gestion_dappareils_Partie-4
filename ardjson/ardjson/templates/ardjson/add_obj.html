@@ -1,0 +1,210 @@
+{% extends 'ardjson/base.html' %}
+
+{% block content %}
+<div class="container">
+  <div class="row justify-content-center">
+    <div class="col-md-6">
+      <br>
+      <h2 class="text-center">Ajouter un nouvel appareil</h2>
+      <form method="post" id="addForm">
+        {% csrf_token %}
+        <div class="form-group">
+          <label for="nom">Nom:</label>
+          <input type="text" class="form-control" id="nom" name="nom">
+        </div>
+        <div class="form-group">
+          <label for="type">Type:</label>
+          <input type="text" class="form-control" id="type" name="type">
+        </div>
+        <div class="form-group" id="mesureGroup" style="display: none;">
+          <label for="typemesure">Type de mesure:</label>
+          <select class="form-control" id="typemesure" name="typemesure">
+            <option value="">Sélectionner le Type de Mesure</option>
+            <option value="temperature">Temperature</option>
+            <option value="humidity">Humidite</option>
+            <option value="temphum">Temperature & Humidite</option>
+            <option value="sound">Son</option>
+            <option value="distance">Distance</option>
+            <option value="photoresistor">Lumière</option>
+          </select>
+        </div>
+        <div class="form-group" id="actionGroup" style="display: none;">
+          <label for="typeaction">Type d'action:</label>
+          <select class="form-control" id="typeaction" name="typeaction">
+            <option value="">Sélectionner le Type d'Action</option>
+            <option value="Allumer / Eteindre">Allumer / Éteindre</option>
+            <option value="Ouvrir / Fermer">Ouvrir / Fermer</option>
+            <option value="Augmenter / Diminuer">Augmenter / Diminuer</option>
+            <option value="Activer / Desactiver">Activer / Désactiver</option>
+            <option value="Tourner / Incliner">Tourner / Incliner</option>
+            <option value="Positionner / Réinitialiser">Positionner / Réinitialiser</option>
+          </select>
+        </div>
+        <button type="button" class="btn btn-primary" id="addBtn">Ajouter</button>
+      </form>
+    </div>
+  </div>
+  <div class="row justify-content-center mt-4">
+    <div class="col-md-6">
+      <h3 class="text-center">Vérification</h3>
+      <div id="verificationContainer" class="scroll-verification"></div>
+    </div>
+  </div>
+  <div class="row justify-content-center mt-4">
+    <div class="col-md-6">
+      <button type="button" class="btn btn-success btn-block" id="submitBtn" style="display: none;">Soumettre</button>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+    document.getElementById('addBtn').addEventListener('click', async function() {
+        var form = document.getElementById('addForm');
+        var formData = new FormData(form);
+        var verificationHtml = '<ul>';
+        for (var pair of formData.entries()) {
+            if (pair[0] !== 'csrfmiddlewaretoken' && pair[0] !== 'typeaction') {
+                verificationHtml += '<li><strong>' + pair[0] + ':</strong> ' + pair[1] + '</li>';
+            }
+        }
+        
+        var sensorType = document.getElementById('typemesure').value;
+        var sensorData = await fetchSensorData(sensorType);
+
+        if (sensorData) {
+            verificationHtml += '<li><strong>Device ID:</strong> ' + sensorData.deviceid + '</li>';
+            if (sensorType === 'temperature') {
+                verificationHtml += '<li><strong>Temperature:</strong> ' + sensorData.temperature + '</li>';
+                verificationHtml += '<li><strong>Humidity:</strong> ' + 0.0 + '</li>';
+                verificationHtml += '<li><strong>Sound:</strong> ' + 0.0 + '</li>';
+                verificationHtml += '<li><strong>Distance:</strong> ' + 0.0 + '</li>';
+                verificationHtml += '<li><strong>Lumiere:</strong> ' + 0.0 + '</li>';
+            } else if (sensorType === 'humidity') {
+                verificationHtml += '<li><strong>Temperature:</strong> ' + 0.0 + '</li>';
+                verificationHtml += '<li><strong>Humidity:</strong> ' + sensorData.humidity + '</li>';
+                verificationHtml += '<li><strong>Sound:</strong> ' + 0.0 + '</li>';
+                verificationHtml += '<li><strong>Distance:</strong> ' + 0.0 + '</li>';
+                verificationHtml += '<li><strong>Lumiere:</strong> ' + 0.0 + '</li>';
+            } else if (sensorType === 'temphum') {
+                verificationHtml += '<li><strong>Temperature:</strong> ' + sensorData.temperature + '</li>';
+                verificationHtml += '<li><strong>Humidity:</strong> ' + sensorData.humidity + '</li>';
+                verificationHtml += '<li><strong>Sound:</strong> ' + 0.0 + '</li>';
+                verificationHtml += '<li><strong>Distance:</strong> ' + 0.0 + '</li>';
+                verificationHtml += '<li><strong>Lumiere:</strong> ' + 0.0 + '</li>';
+            } else if (sensorType === 'sound') {
+                verificationHtml += '<li><strong>Temperature:</strong> ' + 0.0 + '</li>';
+                verificationHtml += '<li><strong>Humidity:</strong> ' + 0.0 + '</li>';
+                verificationHtml += '<li><strong>Sound:</strong> ' + sensorData.sound + '</li>';
+                verificationHtml += '<li><strong>Distance:</strong> ' + 0.0 + '</li>';
+                verificationHtml += '<li><strong>Lumiere:</strong> ' + 0.0 + '</li>';
+            } else if (sensorType === 'distance') {
+                verificationHtml += '<li><strong>Temperature:</strong> ' + 0.0 + '</li>';
+                verificationHtml += '<li><strong>Humidity:</strong> ' + 0.0 + '</li>';
+                verificationHtml += '<li><strong>Sound:</strong> ' + 0.0 + '</li>';
+                verificationHtml += '<li><strong>Distance:</strong> ' + sensorData.distance + '</li>';
+                verificationHtml += '<li><strong>Lumiere:</strong> ' + 0.0 + '</li>';
+            } else if (sensorType === 'photoresistor') {
+                verificationHtml += '<li><strong>Temperature:</strong> ' + 0.0 + '</li>';
+                verificationHtml += '<li><strong>Humidity:</strong> ' + 0.0 + '</li>';
+                verificationHtml += '<li><strong>Sound:</strong> ' + 0.0 + '</li>';
+                verificationHtml += '<li><strong>Distance:</strong> ' + 0.0 + '</li>';
+                verificationHtml += '<li><strong>Lumiere:</strong> ' + sensorData.photoresistor + '</li>';
+            }
+            verificationHtml += '<li><strong>Date:</strong> ' + sensorData.date + '</li>';
+            verificationHtml += '<li><strong>Time:</strong> ' + sensorData.time + '</li>';
+            verificationHtml += '<li><strong>Status:</strong> Actif</li>';
+        } else {
+            verificationHtml += '<li>Error fetching sensor data</li>';
+        }
+
+        verificationHtml += '</ul>';
+        document.getElementById('verificationContainer').innerHTML = verificationHtml;
+        document.getElementById('submitBtn').style.display = 'block';
+    });
+
+    document.getElementById('submitBtn').addEventListener('click', function() {
+      document.getElementById('addForm').submit();
+    });
+
+    document.getElementById('type').addEventListener('change', function() {
+      var type = this.value.toLowerCase();
+      var mesureGroup = document.getElementById('mesureGroup');
+      var actionGroup = document.getElementById('actionGroup');
+      if (type.includes('capteur')) {
+        mesureGroup.style.display = 'block';
+        actionGroup.style.display = 'none';
+      } else if (type.includes('actionneur')) {
+        actionGroup.style.display = 'block';
+        mesureGroup.style.display = 'none';
+      } else {
+        actionGroup.style.display = 'none';
+        mesureGroup.style.display = 'none';
+      }
+      Swal.fire({
+        title: "Voulez-vous ajouter cet appareil en tant que capteur ou actionneur ?",
+        showCancelButton: true,
+        confirmButtonText: "Capteur",
+        cancelButtonText: "Actionneur",
+      }).then((result) => {
+        if (result.isConfirmed) {
+          mesureGroup.style.display = 'block';
+          actionGroup.style.display = 'none';
+        } else {
+          actionGroup.style.display = 'block';
+          mesureGroup.style.display = 'none';
+        }
+      });
+    });
+  });
+
+  async function fetchSensorData(sensorType) {
+    try {
+        const response = await fetch('http://192.168.1.66:8080/api/data');
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        
+        const textData = await response.text();
+        console.log('Fetched text data:', textData);
+        
+        const jsonData = textData.trim().split('\n').map(line => JSON.parse(line));
+        
+        let deviceEntry;
+        switch (sensorType) {
+            case 'temperature':
+                deviceEntry = jsonData.find(entry => entry.temperature !== undefined);
+                break;
+            case 'humidity':
+                deviceEntry = jsonData.find(entry => entry.humidity !== undefined);
+                break;
+            case 'temphum':
+                deviceEntry = jsonData.find(entry => entry.temperature !== undefined && entry.humidity !== undefined);
+                break;
+            case 'photoresistor':
+                deviceEntry = jsonData.find(entry => entry.photoresistor !== undefined);
+                break;
+            case 'sound':
+                deviceEntry = jsonData.find(entry => entry.sound !== undefined);
+                break;
+            default:
+                throw new Error('Invalid sensor type');
+        }
+        
+        if (!deviceEntry) {
+            throw new Error('No data found for the specified sensor type');
+        }
+
+        const { deviceid, temperature, humidity, date, time } = deviceEntry;
+        return { deviceid, [sensorType]: deviceEntry[sensorType], temphum: `${temperature}, ${humidity}`, date, time };
+
+    } catch (error) {
+        console.error('Error fetching sensor data:', error);
+        return null;
+    }
+}
+
+</script>
+
+{% endblock %}
