@@ -124,8 +124,25 @@
         document.getElementById('submitBtn').style.display = 'block';
     });
 
-    document.getElementById('submitBtn').addEventListener('click', function() {
-      document.getElementById('addForm').submit();
+    document.getElementById('submitBtn').addEventListener('click', async function() {
+        var form = document.getElementById('addForm');
+        var formData = new FormData(form);
+        try {
+            const response = await fetch('/api/save-data/', {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-CSRFToken': '{{ csrf_token }}'
+                }
+            });
+            if (!response.ok) {
+                throw new Error('Failed to save data to the server');
+            }
+            Swal.fire('Success', 'Data saved successfully', 'success');
+        } catch (error) {
+            console.error('Error saving data:', error);
+            Swal.fire('Error', 'Failed to save data to the server', 'error');
+        }
     });
 
     document.getElementById('type').addEventListener('change', function() {
@@ -210,7 +227,19 @@
     }
 }
 
+async function saveToDatabase(data) {
+    const response = await fetch('http://127.0.0.1:8000/api/save-data', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+    });
 
+    if (!response.ok) {
+        throw new Error('Failed to save data to database');
+    }
+}
 </script>
 
 {% endblock %}

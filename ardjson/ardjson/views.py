@@ -1,5 +1,6 @@
 from django.shortcuts import render
-from .models import Objetconnecte
+from .models import Objetconnecte, Capteur, Actionneur
+from django.http import JsonResponse
 
 def home(request):
     return render(request, 'ardjson/intro.html')
@@ -23,65 +24,46 @@ def objconnView(request):
     objets = Objetconnecte.objects.all()
     return render(request, 'ardjson/objconn.html', {'objets': objets})
 
-# from django.shortcuts import render
-# from .models import Objetconnecte, Capteur, Actionneur
+def save_data_view(request):
+    if request.method == 'POST':
+        nom = request.POST.get('nom')
+        type = request.POST.get('type')
+        typemesure = request.POST.get('typemesure')
+        device_id = request.POST.get('deviceid')
+        temperature = request.POST.get('temperature')
+        humidity = request.POST.get('humidity')
+        sound = request.POST.get('sound')
+        distance = request.POST.get('distance')
+        lumiere = request.POST.get('lumiere')
+        date = request.POST.get('date')
+        time = request.POST.get('time')
 
-# def home(request):
-#     return render(request, 'ardjson/intro.html')
+        objet = Objetconnecte.objects.create(
+            nom=nom,
+            device_id=device_id,
+            type=type,
+            typemesure=typemesure
+        )
 
-# def objconnView(request):
-#     objets = Objetconnecte.objects.all()
-#     capteurs = Capteur.objects.all()
-#     actionneurs = Actionneur.objects.all()
+        capteur = Capteur.objects.create(
+            objet=objet,
+            status="Actif",
+            temperature=temperature,
+            humidite=humidity,
+            son=sound,
+            distance=distance,
+            lumiere=lumiere,
+            formatted_date=date,
+            formatted_time=time
+        )
 
-#     combined_data = []
+        actionneur = Actionneur.objects.create(
+            objet=objet,
+            status="Actif",
+            formatted_date=date,
+            formatted_time=time
+        )
 
-#     for objet in objets:
-#         obj_dict = {
-#             'nom': objet.nom,
-#             'device_id': objet.device_id,
-#             'type': objet.type,
-#             'typemesure': objet.typemesure,
-#             'typeaction': objet.typeaction,
-#             'capteur': None,
-#             'actionneur': None,
-#         }
-
-#         # Find corresponding Capteur (if exists)
-#         capteur = capteurs.filter(objet=objet).first()
-#         if capteur:
-#             obj_dict['capteur'] = {
-#                 'status': capteur.status,
-#                 'temperature': capteur.temperature,
-#                 'humidite': capteur.humidite,
-#                 'son': capteur.son,
-#                 'distance': capteur.distance,
-#                 'lumiere': capteur.lumiere,
-#                 'formatted_date': capteur.formatted_date,
-#                 'formatted_time': capteur.formatted_time,
-#             }
-
-#         # Find corresponding Actionneur (if exists)
-#         actionneur = actionneurs.filter(objet=objet).first()
-#         if actionneur:
-#             obj_dict['actionneur'] = {
-#                 'status': actionneur.status,
-#                 'formatted_date': actionneur.formatted_date,
-#                 'formatted_time': actionneur.formatted_time,
-#             }
-
-#         combined_data.append(obj_dict)
-
-#     return render(request, 'ardjson/objconn.html', {'objets': combined_data})
-
-# def soundView(request):
-#     return render(request, 'ardjson/sound.html')
-
-# def photoresistanceView(request):
-#     return render(request, 'ardjson/photoresistance.html')
-
-# def dht11View(request):
-#     return render(request, 'ardjson/dht11.html')
-
-# def add_objView(request):
-#     return render(request, 'ardjson/add_obj.html')
+        return JsonResponse({'message': 'Data saved successfully'})
+    else:
+        return JsonResponse({'error': 'Method Not Allowed'}, status=405)
