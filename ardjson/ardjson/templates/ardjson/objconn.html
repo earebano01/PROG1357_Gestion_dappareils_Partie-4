@@ -32,6 +32,52 @@
             </tr>
             {% endfor %}
         </tbody>
+
+        <!-- <thead>
+            <tr>
+                <th>Nom</th>
+                <th>Device ID</th>
+                <th>Type</th>
+                <th>Type de Mesure</th>
+                <th>Type d'Action</th>
+                <th>Temperature</th>
+                <th>Humidite</th>
+                <th>Son</th>
+                <th>Distance</th>
+                <th>Lumiere</th>
+                <th>Date (Capteur)</th>
+                <th>Time (Capteur)</th>
+                <th>Status Actionneur</th>
+                <th>Date (Actionneur)</th>
+                <th>Time (Actionneur)</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody id="body">
+            {% for objet in objets %}
+            <tr>
+                <td>{{ objet.nom }}</td>
+                <td>{{ objet.device_id }}</td>
+                <td>{{ objet.type }}</td>
+                <td>{{ objet.typemesure }}</td>
+                <td>{{ objet.typeaction }}</td>
+                <td>{% if objet.capteur %}{{ objet.capteur.temperature }}{% endif %}</td>
+                <td>{% if objet.capteur %}{{ objet.capteur.humidite }}{% endif %}</td>
+                <td>{% if objet.capteur %}{{ objet.capteur.son }}{% endif %}</td>
+                <td>{% if objet.capteur %}{{ objet.capteur.distance }}{% endif %}</td>
+                <td>{% if objet.capteur %}{{ objet.capteur.lumiere }}{% endif %}</td>
+                <td>{% if objet.capteur %}{{ objet.capteur.formatted_date }}{% endif %}</td>
+                <td>{% if objet.capteur %}{{ objet.capteur.formatted_time }}{% endif %}</td>
+                <td>{% if objet.actionneur %}{{ objet.actionneur.status }}{% endif %}</td>
+                <td>{% if objet.actionneur %}{{ objet.actionneur.formatted_date }}{% endif %}</td>
+                <td>{% if objet.actionneur %}{{ objet.actionneur.formatted_time }}{% endif %}</td>
+                <td>
+                    <a href="" class="btn btn-primary btn-sm">Modifier</a>
+                    <a href="" class="btn btn-danger btn-sm">Supprimer</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody> -->
     </table>
 </div>
 <br>

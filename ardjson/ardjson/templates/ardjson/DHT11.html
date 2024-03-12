@@ -6,7 +6,7 @@
 <div class="container mt-4">
     <h3 class="text-center">Témperature</h3>
     <div class="text-center">
-        <a href="http://192.168.1.66:8080/api/data" target="_blank">http://192.168.1.66:8080/api/data</a>
+        <a href="http://192.168.5.199:8080/api/data" target="_blank">http://192.168.5.199:8080/api/data</a>
     </div>
     <br>
     <div class="row justify-content-center">
@@ -19,7 +19,7 @@
 <div class="container mt-4">
     <h3 class="text-center">Humidité</h3>
     <div class="text-center">
-        <a href="http://192.168.1.66:8080/api/data" target="_blank">http://192.168.1.66:8080/api/data</a>
+        <a href="http://192.168.5.199:8080/api/data" target="_blank">http://192.168.5.199:8080/api/data</a>
     </div>
     <br>
     <div class="row justify-content-center">
@@ -32,7 +32,7 @@
 <div class="container mt-4">
     <h3 class="text-center">Témperature et Humidité</h3>
     <div class="text-center">
-        <a href="http://192.168.1.66:8080/api/data" target="_blank">http://192.168.1.66:8080/api/data</a>
+        <a href="http://192.168.5.199:8080/api/data" target="_blank">http://192.168.5.199:8080/api/data</a>
     </div>
     <br>
     <div class="row justify-content-center">
@@ -254,14 +254,14 @@
     }
 
     window.onload = function() {
-        fetchDataAndChart("http://192.168.1.66:8080/api/data", "temperature");
-        fetchDataAndChart("http://192.168.1.66:8080/api/data", "humidity");
-        fetchDataAndChart("http://192.168.1.66:8080/api/data", "temphum");
+        fetchDataAndChart("http://192.168.5.199:8080/api/data", "temperature");
+        fetchDataAndChart("http://192.168.5.199:8080/api/data", "humidity");
+        fetchDataAndChart("http://192.168.5.199:8080/api/data", "temphum");
 
         setInterval(function () {
-            fetchDataAndChart("http://192.168.1.66:8080/api/data", "temperature");
-            fetchDataAndChart("http://192.168.1.66:8080/api/data", "humidity");
-            fetchDataAndChart("http://192.168.1.66:8080/api/data", "temphum");
+            fetchDataAndChart("http://192.168.5.199:8080/api/data", "temperature");
+            fetchDataAndChart("http://192.168.5.199:8080/api/data", "humidity");
+            fetchDataAndChart("http://192.168.5.199:8080/api/data", "temphum");
         }, 3000);
     };
 </script>

@@ -161,7 +161,7 @@
 
   async function fetchSensorData(sensorType) {
     try {
-        const response = await fetch('http://192.168.1.66:8080/api/data');
+        const response = await fetch('http://192.168.5.199:8080/api/data');
         if (!response.ok) {
             throw new Error('Network response was not ok');
         }
@@ -174,10 +174,10 @@
         let deviceEntry;
         switch (sensorType) {
             case 'temperature':
-                deviceEntry = jsonData.find(entry => entry.temperature !== undefined);
+                deviceEntry = jsonData.find(entry => entry.temperature !== undefined && entry.humidity !== undefined);
                 break;
             case 'humidity':
-                deviceEntry = jsonData.find(entry => entry.humidity !== undefined);
+                deviceEntry = jsonData.find(entry => entry.temperature !== undefined && entry.humidity !== undefined);
                 break;
             case 'temphum':
                 deviceEntry = jsonData.find(entry => entry.temperature !== undefined && entry.humidity !== undefined);
@@ -196,14 +196,20 @@
             throw new Error('No data found for the specified sensor type');
         }
 
-        const { deviceid, temperature, humidity, date, time } = deviceEntry;
-        return { deviceid, [sensorType]: deviceEntry[sensorType], temphum: `${temperature}, ${humidity}`, date, time };
+        let temphum;
+        if (deviceEntry.temperature !== undefined && deviceEntry.humidity !== undefined) {
+            temphum = `${deviceEntry.temperature}, ${deviceEntry.humidity}`;
+        }
+
+        const { deviceid, temperature, humidity, date, time, photoresistor, sound, distance, lumiere } = deviceEntry;
+        return { deviceid, temperature, humidity, date, time, photoresistor, sound, distance, lumiere, temphum };
 
     } catch (error) {
         console.error('Error fetching sensor data:', error);
         return null;
     }
 }
+
 
 </script>
 

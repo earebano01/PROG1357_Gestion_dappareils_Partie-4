@@ -6,7 +6,7 @@
 <div class="container mt-4">
     <h3 class="text-center">Son</h3>
     <div class="text-center">
-        <a href="http://192.168.1.66:8080/api/data" target="_blank">http://192.168.1.66:8080/api/data</a>
+        <a href="http://192.168.5.199:8080/api/data" target="_blank">http://192.168.5.199:8080/api/data</a>
     </div>
     <br>
     <div class="row justify-content-center">
@@ -85,13 +85,15 @@
     }
 
     window.onload = function() {
-        fetchDataAndChart("http://192.168.1.66:8080/api/data");
+        fetchDataAndChart("http://192.168.5.199:8080/api/data");
 
         setInterval(function () {
-            fetchDataAndChart("http://192.168.1.66:8080/api/data");
+            fetchDataAndChart("http://192.168.5.199:8080/api/data");
         }, 3000);
     };
 </script>
 
 <br>
 {% endblock %}
+
+
