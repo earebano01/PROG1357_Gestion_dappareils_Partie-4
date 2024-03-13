@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from .models import Objetconnecte, Capteur, Actionneur
 from django.http import JsonResponse
+import json
 
 def home(request):
     return render(request, 'ardjson/intro.html')
@@ -26,44 +27,40 @@ def objconnView(request):
 
 def save_data_view(request):
     if request.method == 'POST':
-        nom = request.POST.get('nom')
-        type = request.POST.get('type')
-        typemesure = request.POST.get('typemesure')
-        device_id = request.POST.get('deviceid')
-        temperature = request.POST.get('temperature')
-        humidity = request.POST.get('humidity')
-        sound = request.POST.get('sound')
-        distance = request.POST.get('distance')
-        lumiere = request.POST.get('lumiere')
-        date = request.POST.get('date')
-        time = request.POST.get('time')
+        try:
+            form_data = json.loads(request.body.decode('utf-8'))
+            print('Données du formulaire reçues :', form_data)
+            
+            objet = Objetconnecte.objects.create(
+                nom=form_data.get('nom'),
+                device_id=form_data.get('Device ID'),
+                type=form_data.get('type'),
+                typemesure=form_data.get('typemesure')
+            )
 
-        objet = Objetconnecte.objects.create(
-            nom=nom,
-            device_id=device_id,
-            type=type,
-            typemesure=typemesure
-        )
+            capteur = Capteur.objects.create(
+                objet=objet,
+                status=form_data.get('Status'),
+                temperature=form_data.get('Temperature'),
+                humidite=form_data.get('Humidity'),
+                son=form_data.get('Sound'),
+                distance=form_data.get('Distance'),
+                lumiere=form_data.get('Lumiere'),
+                formatted_date=form_data.get('Date'),
+                formatted_time=form_data.get('Time')
+            )
 
-        capteur = Capteur.objects.create(
-            objet=objet,
-            status="Actif",
-            temperature=temperature,
-            humidite=humidity,
-            son=sound,
-            distance=distance,
-            lumiere=lumiere,
-            formatted_date=date,
-            formatted_time=time
-        )
+            actionneur = Actionneur.objects.create(
+                objet=objet,
+                status=form_data.get('Status'),
+                formatted_date=form_data.get('Date'),
+                formatted_time=form_data.get('Time')
+            )
 
-        actionneur = Actionneur.objects.create(
-            objet=objet,
-            status="Actif",
-            formatted_date=date,
-            formatted_time=time
-        )
-
-        return JsonResponse({'message': 'Data saved successfully'})
+            print('Données enregistrées avec succès')
+            return JsonResponse({'message': 'Données enregistrées avec succès'})
+        except Exception as e:
+            print('Échec de l\'enregistrement des données :', e)
+            return JsonResponse({'erreur': 'Échec de l\'enregistrement des données'}, status=500)
     else:
-        return JsonResponse({'error': 'Method Not Allowed'}, status=405)
+        return JsonResponse({'erreur': 'Méthode non autorisée'}, status=405)

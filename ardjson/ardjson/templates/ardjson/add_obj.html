@@ -125,25 +125,31 @@
     });
 
     document.getElementById('submitBtn').addEventListener('click', async function() {
-        var form = document.getElementById('addForm');
-        var formData = new FormData(form);
-        try {
-            const response = await fetch('/api/save-data/', {
-                method: 'POST',
-                body: formData,
-                headers: {
-                    'X-CSRFToken': '{{ csrf_token }}'
-                }
-            });
-            if (!response.ok) {
-                throw new Error('Failed to save data to the server');
-            }
-            Swal.fire('Success', 'Data saved successfully', 'success');
-        } catch (error) {
-            console.error('Error saving data:', error);
-            Swal.fire('Error', 'Failed to save data to the server', 'error');
+    var verificationData = extractDataFromVerificationContainer();
+    try {
+        const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+        const response = await saveToDatabase('/api/save-data/', verificationData, csrfToken);
+        if (!response.ok) {
+            throw new Error('Failed to save data to the server');
         }
+        Swal.fire('Success', 'Data saved successfully', 'success');
+    } catch (error) {
+        console.error('Error saving data:', error);
+        Swal.fire('Error', 'Failed to save data to the server', 'error');
+    }
+});
+
+async function saveToDatabase(url, data, csrfToken) {
+    const response = await fetch(url, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': csrfToken,
+        },
+        body: JSON.stringify(data),
     });
+    return response;
+}
 
     document.getElementById('type').addEventListener('change', function() {
       var type = this.value.toLowerCase();
@@ -180,11 +186,11 @@
     try {
         const response = await fetch('http://192.168.5.199:8080/api/data');
         if (!response.ok) {
-            throw new Error('Network response was not ok');
+            throw new Error('La réponse du réseau n\'était pas valide.');
         }
         
         const textData = await response.text();
-        console.log('Fetched text data:', textData);
+        console.log('Données textuelles récupérées :', textData);
         
         const jsonData = textData.trim().split('\n').map(line => JSON.parse(line));
         
@@ -206,11 +212,11 @@
                 deviceEntry = jsonData.find(entry => entry.sound !== undefined);
                 break;
             default:
-                throw new Error('Invalid sensor type');
+                throw new Error('Type de capteur invalide');
         }
         
         if (!deviceEntry) {
-            throw new Error('No data found for the specified sensor type');
+            throw new Error('Aucune donnée trouvée pour le type de capteur spécifié');
         }
 
         let temphum;
@@ -222,24 +228,23 @@
         return { deviceid, temperature, humidity, date, time, photoresistor, sound, distance, lumiere, temphum };
 
     } catch (error) {
-        console.error('Error fetching sensor data:', error);
+        console.error('Erreur lors de la récupération des données du capteur :', error);
         return null;
     }
 }
 
-async function saveToDatabase(data) {
-    const response = await fetch('http://127.0.0.1:8000/api/save-data', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(data),
+function extractDataFromVerificationContainer() {
+    var verificationData = {};
+    var verificationItems = document.querySelectorAll('#verificationContainer ul li');
+    verificationItems.forEach(function(item) {
+        var parts = item.textContent.split(':');
+        var key = parts[0].trim();
+        var value = parts[1].trim();
+        verificationData[key] = value;
     });
-
-    if (!response.ok) {
-        throw new Error('Failed to save data to database');
-    }
+    return verificationData;
 }
+
 </script>
 
 {% endblock %}
