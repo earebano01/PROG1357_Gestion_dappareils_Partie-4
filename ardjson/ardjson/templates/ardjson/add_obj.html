@@ -20,12 +20,12 @@
           <label for="typemesure">Type de mesure:</label>
           <select class="form-control" id="typemesure" name="typemesure">
             <option value="">Sélectionner le Type de Mesure</option>
-            <option value="temperature">Temperature</option>
-            <option value="humidity">Humidite</option>
-            <option value="temphum">Temperature & Humidite</option>
-            <option value="sound">Son</option>
-            <option value="distance">Distance</option>
-            <option value="photoresistor">Lumière</option>
+            <option value="Temperature">Temperature</option>
+            <option value="Humidite">Humidite</option>
+            <option value="Temperature & Humidite">Temperature & Humidite</option>
+            <option value="Son">Son</option>
+            <option value="Distance">Distance</option>
+            <option value="Lumiere">Lumière</option>
           </select>
         </div>
         <div class="form-group" id="actionGroup" style="display: none;">
@@ -75,40 +75,40 @@
 
         if (sensorData) {
             verificationHtml += '<li><strong>Device ID:</strong> ' + sensorData.deviceid + '</li>';
-            if (sensorType === 'temperature') {
+            if (sensorType === 'Temperature') {
                 verificationHtml += '<li><strong>Temperature:</strong> ' + sensorData.temperature + '</li>';
-                verificationHtml += '<li><strong>Humidity:</strong> ' + 0.0 + '</li>';
-                verificationHtml += '<li><strong>Sound:</strong> ' + 0.0 + '</li>';
+                verificationHtml += '<li><strong>Humidite:</strong> ' + 0.0 + '</li>';
+                verificationHtml += '<li><strong>Son:</strong> ' + 0.0 + '</li>';
                 verificationHtml += '<li><strong>Distance:</strong> ' + 0.0 + '</li>';
                 verificationHtml += '<li><strong>Lumiere:</strong> ' + 0.0 + '</li>';
-            } else if (sensorType === 'humidity') {
+            } else if (sensorType === 'Humidite') {
                 verificationHtml += '<li><strong>Temperature:</strong> ' + 0.0 + '</li>';
-                verificationHtml += '<li><strong>Humidity:</strong> ' + sensorData.humidity + '</li>';
-                verificationHtml += '<li><strong>Sound:</strong> ' + 0.0 + '</li>';
+                verificationHtml += '<li><strong>Humidite:</strong> ' + sensorData.humidite + '</li>';
+                verificationHtml += '<li><strong>Son:</strong> ' + 0.0 + '</li>';
                 verificationHtml += '<li><strong>Distance:</strong> ' + 0.0 + '</li>';
                 verificationHtml += '<li><strong>Lumiere:</strong> ' + 0.0 + '</li>';
-            } else if (sensorType === 'temphum') {
+            } else if (sensorType === 'Temperature & Humidite') {
                 verificationHtml += '<li><strong>Temperature:</strong> ' + sensorData.temperature + '</li>';
-                verificationHtml += '<li><strong>Humidity:</strong> ' + sensorData.humidity + '</li>';
-                verificationHtml += '<li><strong>Sound:</strong> ' + 0.0 + '</li>';
+                verificationHtml += '<li><strong>Humidite:</strong> ' + sensorData.humidity + '</li>';
+                verificationHtml += '<li><strong>Son:</strong> ' + 0.0 + '</li>';
                 verificationHtml += '<li><strong>Distance:</strong> ' + 0.0 + '</li>';
                 verificationHtml += '<li><strong>Lumiere:</strong> ' + 0.0 + '</li>';
-            } else if (sensorType === 'sound') {
+            } else if (sensorType === 'Son') {
                 verificationHtml += '<li><strong>Temperature:</strong> ' + 0.0 + '</li>';
-                verificationHtml += '<li><strong>Humidity:</strong> ' + 0.0 + '</li>';
-                verificationHtml += '<li><strong>Sound:</strong> ' + sensorData.sound + '</li>';
+                verificationHtml += '<li><strong>Humidite:</strong> ' + 0.0 + '</li>';
+                verificationHtml += '<li><strong>Son:</strong> ' + sensorData.sound + '</li>';
                 verificationHtml += '<li><strong>Distance:</strong> ' + 0.0 + '</li>';
                 verificationHtml += '<li><strong>Lumiere:</strong> ' + 0.0 + '</li>';
-            } else if (sensorType === 'distance') {
+            } else if (sensorType === 'Distance') {
                 verificationHtml += '<li><strong>Temperature:</strong> ' + 0.0 + '</li>';
-                verificationHtml += '<li><strong>Humidity:</strong> ' + 0.0 + '</li>';
-                verificationHtml += '<li><strong>Sound:</strong> ' + 0.0 + '</li>';
+                verificationHtml += '<li><strong>Humidite:</strong> ' + 0.0 + '</li>';
+                verificationHtml += '<li><strong>Son:</strong> ' + 0.0 + '</li>';
                 verificationHtml += '<li><strong>Distance:</strong> ' + sensorData.distance + '</li>';
                 verificationHtml += '<li><strong>Lumiere:</strong> ' + 0.0 + '</li>';
-            } else if (sensorType === 'photoresistor') {
+            } else if (sensorType === 'Lumiere') {
                 verificationHtml += '<li><strong>Temperature:</strong> ' + 0.0 + '</li>';
-                verificationHtml += '<li><strong>Humidity:</strong> ' + 0.0 + '</li>';
-                verificationHtml += '<li><strong>Sound:</strong> ' + 0.0 + '</li>';
+                verificationHtml += '<li><strong>Humidite:</strong> ' + 0.0 + '</li>';
+                verificationHtml += '<li><strong>Son:</strong> ' + 0.0 + '</li>';
                 verificationHtml += '<li><strong>Distance:</strong> ' + 0.0 + '</li>';
                 verificationHtml += '<li><strong>Lumiere:</strong> ' + sensorData.photoresistor + '</li>';
             }
@@ -116,7 +116,7 @@
             verificationHtml += '<li><strong>Time:</strong> ' + sensorData.time + '</li>';
             verificationHtml += '<li><strong>Status:</strong> Actif</li>';
         } else {
-            verificationHtml += '<li>Error fetching sensor data</li>';
+          verificationHtml += '<li>Erreur lors de la récupération des données du capteur</li>';
         }
 
         verificationHtml += '</ul>';
@@ -130,12 +130,12 @@
         const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
         const response = await saveToDatabase('/api/save-data/', verificationData, csrfToken);
         if (!response.ok) {
-            throw new Error('Failed to save data to the server');
+            throw new Error('L\'enregistrement des données sur le serveur a échoué');
         }
-        Swal.fire('Success', 'Data saved successfully', 'success');
+        Swal.fire('Success', 'Données enregistrées avec succès', 'succès');
     } catch (error) {
-        console.error('Error saving data:', error);
-        Swal.fire('Error', 'Failed to save data to the server', 'error');
+        console.error('Erreur lors de l\'enregistrement des données :', error);
+        Swal.fire('Erreur', 'Échec de l\'enregistrement des données sur le serveur', 'erreur');
     }
 });
 
@@ -196,19 +196,19 @@ async function saveToDatabase(url, data, csrfToken) {
         
         let deviceEntry;
         switch (sensorType) {
-            case 'temperature':
+            case 'Temperature':
                 deviceEntry = jsonData.find(entry => entry.temperature !== undefined && entry.humidity !== undefined);
                 break;
-            case 'humidity':
+            case 'Humidite':
                 deviceEntry = jsonData.find(entry => entry.temperature !== undefined && entry.humidity !== undefined);
                 break;
-            case 'temphum':
+            case 'Temperature & Humidite':
                 deviceEntry = jsonData.find(entry => entry.temperature !== undefined && entry.humidity !== undefined);
                 break;
-            case 'photoresistor':
+            case 'Lumiere':
                 deviceEntry = jsonData.find(entry => entry.photoresistor !== undefined);
                 break;
-            case 'sound':
+            case 'Son':
                 deviceEntry = jsonData.find(entry => entry.sound !== undefined);
                 break;
             default:
