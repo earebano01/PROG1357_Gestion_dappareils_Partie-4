@@ -128,7 +128,7 @@
     var verificationData = extractDataFromVerificationContainer();
     try {
         const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
-        const response = await saveToDatabase('/api/save-data/', verificationData, csrfToken);
+        const response = await saveDatabase('/api/save-data/', verificationData, csrfToken);
         if (!response.ok) {
             throw new Error('L\'enregistrement des données sur le serveur a échoué');
         }
@@ -139,7 +139,7 @@
     }
 });
 
-async function saveToDatabase(url, data, csrfToken) {
+async function saveDatabase(url, data, csrfToken) {
     const response = await fetch(url, {
         method: 'POST',
         headers: {
@@ -184,7 +184,7 @@ async function saveToDatabase(url, data, csrfToken) {
 
   async function fetchSensorData(sensorType) {
     try {
-        const response = await fetch('http://192.168.5.199:8080/api/data');
+        const response = await fetch('http://192.168.1.153:8080/api/data');
         if (!response.ok) {
             throw new Error('La réponse du réseau n\'était pas valide.');
         }

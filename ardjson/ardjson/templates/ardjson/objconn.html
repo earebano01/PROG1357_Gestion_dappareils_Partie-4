@@ -9,6 +9,7 @@
     <table class="table table-dark table-striped table-padding">
         <thead>
             <tr>
+                <th>Objet ID</th>
                 <th>Nom</th>
                 <th>Device ID</th>
                 <th>Type</th>
@@ -20,68 +21,93 @@
         <tbody id="body">
             {% for objet in objets %}
             <tr>
+                <td>{{ objet.objet_id }}</td>
                 <td>{{ objet.nom }}</td>
                 <td>{{ objet.device_id }}</td>
                 <td>{{ objet.type }}</td>
                 <td>{{ objet.typemesure }}</td>
                 <td>{{ objet.typeaction }}</td>
                 <td>
-                    <a href="" class="btn btn-primary btn-sm">Modifier</a>
-                    <a href="" class="btn btn-danger btn-sm">Supprimer</a>
+                    <a href="{% url 'upd_obj' objet.objet_id %}" class="btn btn-primary btn-sm">Modifier</a>
+                    <button class="btn btn-danger btn-sm delete-btn" data-obj-id="{{ objet.objet_id }}">Supprimer</button>
                 </td>
             </tr>
             {% endfor %}
         </tbody>
-
-        <!-- <thead>
-            <tr>
-                <th>Nom</th>
-                <th>Device ID</th>
-                <th>Type</th>
-                <th>Type de Mesure</th>
-                <th>Type d'Action</th>
-                <th>Temperature</th>
-                <th>Humidite</th>
-                <th>Son</th>
-                <th>Distance</th>
-                <th>Lumiere</th>
-                <th>Date (Capteur)</th>
-                <th>Time (Capteur)</th>
-                <th>Status Actionneur</th>
-                <th>Date (Actionneur)</th>
-                <th>Time (Actionneur)</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody id="body">
-            {% for objet in objets %}
-            <tr>
-                <td>{{ objet.nom }}</td>
-                <td>{{ objet.device_id }}</td>
-                <td>{{ objet.type }}</td>
-                <td>{{ objet.typemesure }}</td>
-                <td>{{ objet.typeaction }}</td>
-                <td>{% if objet.capteur %}{{ objet.capteur.temperature }}{% endif %}</td>
-                <td>{% if objet.capteur %}{{ objet.capteur.humidite }}{% endif %}</td>
-                <td>{% if objet.capteur %}{{ objet.capteur.son }}{% endif %}</td>
-                <td>{% if objet.capteur %}{{ objet.capteur.distance }}{% endif %}</td>
-                <td>{% if objet.capteur %}{{ objet.capteur.lumiere }}{% endif %}</td>
-                <td>{% if objet.capteur %}{{ objet.capteur.formatted_date }}{% endif %}</td>
-                <td>{% if objet.capteur %}{{ objet.capteur.formatted_time }}{% endif %}</td>
-                <td>{% if objet.actionneur %}{{ objet.actionneur.status }}{% endif %}</td>
-                <td>{% if objet.actionneur %}{{ objet.actionneur.formatted_date }}{% endif %}</td>
-                <td>{% if objet.actionneur %}{{ objet.actionneur.formatted_time }}{% endif %}</td>
-                <td>
-                    <a href="" class="btn btn-primary btn-sm">Modifier</a>
-                    <a href="" class="btn btn-danger btn-sm">Supprimer</a>
-                </td>
-            </tr>
-            {% endfor %}
-        </tbody> -->
     </table>
 </div>
 <br>
 <div class="text-center">
     <a href="{% url 'add_obj' %}" class="btn btn-success">Ajouter un Objet Connecté</a>
 </div>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const deleteButtons = document.querySelectorAll('.delete-btn');
+        
+        deleteButtons.forEach(function(button) {
+            button.addEventListener('click', function() {
+                const objId = this.getAttribute('data-obj-id');
+                Swal.fire({
+                    title: 'Êtes-vous sûr de vouloir supprimer cet objet ?',
+                    text: 'Cette action est irréversible !',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Oui, supprimer',
+                    cancelButtonText: 'Annuler'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        deleteObject(objId);
+                    }
+                });
+            });
+        });
+    });
+
+    function deleteObject(objId) {
+        const xhr = new XMLHttpRequest();
+        xhr.open('DELETE', '/delete_obj/' + objId + '/');
+        // Include CSRF token in request headers
+        xhr.setRequestHeader('X-CSRFToken', getCookie('csrftoken'));
+        xhr.onload = function () {
+            if (xhr.status === 200) {
+                const response = JSON.parse(xhr.responseText);
+                Swal.fire('Succès', response.message, 'success').then(() => {
+                    // Reload or update the page after successful deletion
+                    location.reload();
+                });
+            } else {
+                Swal.fire('Erreur', 'Échec de la suppression de l\'objet', 'error');
+                console.error('Échec de la suppression de l\'objet :', xhr.statusText);
+            }
+        };
+        xhr.onerror = function () {
+            Swal.fire('Erreur', 'Échec de la suppression de l\'objet', 'error');
+            console.error('Échec de la suppression de l\'objet :', xhr.statusText);
+        };
+        xhr.send();
+    }
+
+    // Function to get CSRF token from cookies
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                // Does this cookie string begin with the name we want?
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+</script>
+
 {% endblock %}
+

@@ -13,6 +13,8 @@ urlpatterns = [
     path('photoresistance/', views.photoresistanceView, name='photoresistance'),    
     path('dht11/', views.dht11View, name='dht11'),
     path('add_obj/', views.add_objView, name='add_obj'),
-    path('api/save-data/', views.save_data_view, name='save_data'),
+    path('api/save-data/', views.savedataView, name='save_data'),
+    path('delete_obj/<int:obj_id>/', views.delete_obj_view, name='delete_obj'),
+    path('upd_obj/<int:obj_id>/', views.upd_obj_view, name='upd_obj'),
 ]
 

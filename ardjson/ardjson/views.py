@@ -1,7 +1,8 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from .models import Objetconnecte, Capteur, Actionneur
 from django.http import JsonResponse
 import json
+from django.shortcuts import get_object_or_404
 
 def home(request):
     return render(request, 'ardjson/intro.html')
@@ -22,10 +23,10 @@ def add_objView(request):
     return render(request, 'ardjson/add_obj.html')
 
 def objconnView(request):
-    objets = Objetconnecte.objects.all()
+    objets = Objetconnecte.objects.all().order_by('-objet_id')
     return render(request, 'ardjson/objconn.html', {'objets': objets})
 
-def save_data_view(request):
+def savedataView(request):
     if request.method == 'POST':
         try:
             form_data = json.loads(request.body.decode('utf-8'))
@@ -64,3 +65,34 @@ def save_data_view(request):
             return JsonResponse({'erreur': 'Échec de l\'enregistrement des données'}, status=500)
     else:
         return JsonResponse({'erreur': 'Méthode non autorisée'}, status=405)
+
+def delete_obj_view(request, obj_id):
+    if request.method == 'DELETE':
+        try:
+            obj = get_object_or_404(Objetconnecte, pk=obj_id)
+            obj.delete()  
+            print('Objet supprimé avec succès')
+            return JsonResponse({'message': 'Objet supprimé avec succès'})
+        except Exception as e:
+            print('Échec de la suppression de l\'objet :', e)  
+            return JsonResponse({'error': 'Échec de la suppression de l\'objet'}, status=500)
+    else:
+        return JsonResponse({'error': 'Méthode non autorisée'}, status=405)
+
+def upd_obj_view(request, obj_id):
+    try:
+        obj = Objetconnecte.objects.get(objet_id=obj_id)
+        print('Objet trouvé :', obj.nom, obj.type, obj.typemesure)
+        if request.method == 'POST':
+            obj.nom = request.POST.get('nom')
+            obj.type = request.POST.get('type')
+            obj.save()  
+            print('Objet mis à jour :', obj.nom, obj.type, obj.typemesure)  
+            return JsonResponse({'message': 'Objet mis à jour avec succès'})
+        else:
+            return render(request, 'ardjson/upd_obj.html', {'objet': obj})
+    except Objetconnecte.DoesNotExist:
+        return redirect('objconn')
+    except Exception as e:
+        print('Erreur lors de la mise à jour de l\'objet :', e) 
+        return JsonResponse({'error': 'Erreur lors de la mise à jour de l\'objet'}, status=500)
