@@ -1,62 +1,6 @@
 {% extends 'ardjson/base.html' %}
 
 {% block content %}
-<!-- <div class="container">
-  <div class="row justify-content-center">
-    <div class="col-md-6">
-      <br>
-      <h2 class="text-center">Ajouter un nouvel appareil</h2>
-      <form method="post" id="addForm">
-        {% csrf_token %}
-        <div class="form-group">
-          <label for="nom">Nom:</label>
-          <input type="text" class="form-control" id="nom" name="nom">
-        </div>
-        <div class="form-group">
-          <label for="type">Type:</label>
-          <input type="text" class="form-control" id="type" name="type">
-        </div>
-        <div class="form-group" id="mesureGroup" style="display: none;">
-          <label for="typemesure">Type de mesure:</label>
-          <select class="form-control" id="typemesure" name="typemesure">
-            <option value="">Sélectionner le Type de Mesure</option>
-            <option value="Temperature">Temperature</option>
-            <option value="Humidite">Humidite</option>
-            <option value="Temperature & Humidite">Temperature & Humidite</option>
-            <option value="Son">Son</option>
-            <option value="Distance">Distance</option>
-            <option value="Lumiere">Lumière</option>
-          </select>
-        </div>
-        <div class="form-group" id="actionGroup" style="display: none;">
-          <label for="typeaction">Type d'action:</label>
-          <select class="form-control" id="typeaction" name="typeaction">
-            <option value="">Sélectionner le Type d'Action</option>
-            <option value="Allumer / Eteindre">Allumer / Éteindre</option>
-            <option value="Ouvrir / Fermer">Ouvrir / Fermer</option>
-            <option value="Augmenter / Diminuer">Augmenter / Diminuer</option>
-            <option value="Activer / Desactiver">Activer / Désactiver</option>
-            <option value="Tourner / Incliner">Tourner / Incliner</option>
-            <option value="Positionner / Réinitialiser">Positionner / Réinitialiser</option>
-          </select>
-        </div>
-        <button type="button" class="btn btn-primary" id="addBtn">Ajouter</button>
-      </form>
-    </div>
-  </div>
-  <div class="row justify-content-center mt-4">
-    <div class="col-md-6">
-      <h3 class="text-center">Vérification</h3>
-      <div id="verificationContainer" class="scroll-verification"></div>
-    </div>
-  </div>
-  <div class="row justify-content-center mt-4">
-    <div class="col-md-6">
-      <button type="button" class="btn btn-success btn-block" id="submitBtn" style="display: none;">Soumettre</button>
-    </div>
-  </div>
-</div> -->
-
 <div class="container">
   <div class="row justify-content-center">
     <div class="col-md-6">
