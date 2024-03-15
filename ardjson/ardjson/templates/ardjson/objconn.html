@@ -68,25 +68,25 @@
     });
 
     function deleteObject(objId) {
-        const xhr = new XMLHttpRequest();
-        xhr.open('DELETE', '/delete_obj/' + objId + '/');
-        xhr.setRequestHeader('X-CSRFToken', getCookie('csrftoken'));
-        xhr.onload = function () {
-            if (xhr.status === 200) {
-                const response = JSON.parse(xhr.responseText);
+        const del = new XMLHttpRequest();
+        del.open('DELETE', '/delete_obj/' + objId + '/');
+        del.setRequestHeader('X-CSRFToken', getCookie('csrftoken'));
+        del.onload = function () {
+            if (del.status === 200) {
+                const response = JSON.parse(del.responseText);
                 Swal.fire('Succès', response.message, 'success').then(() => {
                     location.reload();
                 });
             } else {
                 Swal.fire('Erreur', 'Échec de la suppression de l\'objet', 'error');
-                console.error('Échec de la suppression de l\'objet :', xhr.statusText);
+                console.error('Échec de la suppression de l\'objet :', del.statusText);
             }
         };
-        xhr.onerror = function () {
+        del.onerror = function () {
             Swal.fire('Erreur', 'Échec de la suppression de l\'objet', 'error');
-            console.error('Échec de la suppression de l\'objet :', xhr.statusText);
+            console.error('Échec de la suppression de l\'objet :', del.statusText);
         };
-        xhr.send();
+        del.send();
     }
 
     function getCookie(name) {
